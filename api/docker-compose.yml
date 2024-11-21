@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  shopper-move-pg:
+    image: bitnami/postgresql
+    container_name: shopper-move-pg
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRESQL_USERNAME: will
+      POSTGRESQL_PASSWORD: 123456
+      POSTGRESQL_DATABASE: shoppermove

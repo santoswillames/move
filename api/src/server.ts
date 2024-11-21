@@ -1,15 +1,15 @@
-import { app } from "./app";
-import { env } from "./env";
+import { app } from './app'
+import { env } from './env'
 
-app.get("/", (_, reply) => {
-  reply.send({ hello: "world" });
-});
+app.get('/', (_, reply) => {
+  reply.send({ hello: 'world' })
+})
 
 app
   .listen({
-    host: "0.0.0.0",
+    host: '0.0.0.0',
     port: env.PORT,
   })
   .then(() => {
-    console.log("🚀 HTTP server running");
-  });
+    console.log('🚀 HTTP server running')
+  })
