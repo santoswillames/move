@@ -39,12 +39,14 @@ model Driver {
 }
 
 model Ride {
-  id          String @id @default(uuid())
+  id          String   @id @default(uuid())
   origin      String
   destination String
   distance    Float
   duration    String
   value       Float
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 
   driver    Driver @relation(fields: [driver_id], references: [id])
   driver_id Int
