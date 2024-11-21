@@ -2,18 +2,18 @@ import type { IDriverRepository } from '../driver-repository'
 import { prisma } from '@/lib/prisma'
 
 export class PrismaDriverRepository implements IDriverRepository {
-  async findById(id: number) {
-    const driver = await prisma.driver.findUnique({
+  async findByCompatibleKm(minKm: number) {
+    const drivers = await prisma.driver.findMany({
       where: {
-        id,
+        minKm: {
+          lte: minKm,
+        },
+      },
+      orderBy: {
+        minKm: 'asc',
       },
     })
 
-    return driver
-  }
-
-  async list() {
-    const drivers = await prisma.driver.findMany()
     return drivers
   }
 }
