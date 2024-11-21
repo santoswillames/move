@@ -1,5 +1,5 @@
 import { PrismaCustomersRepository } from '@/repositories/prisma/prisma-customer-repository'
-import { UserAlreadyExistsError } from '@/use-cases/errors/user-already-exists-error'
+import { UserAlreadyExistsError } from '@/use-cases/errors/customer-already-exists-error'
 import { RegisterCustomerUseCase } from '@/use-cases/register-customer-use-case'
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
