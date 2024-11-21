@@ -1,8 +1,10 @@
 import type { FastifyInstance } from 'fastify'
 import { authenticate } from './controllers/authenticate-controller'
+import { register } from './controllers/register-customer-controller'
 
 export async function appRoutes(app: FastifyInstance) {
   app.post('/sessions', authenticate)
+  app.post('/customers', register)
   /* app.post("/ride/estimate", () =>
     console.log({
       customer_id: "string",
