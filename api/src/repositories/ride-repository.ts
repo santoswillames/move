@@ -1,8 +1,13 @@
-import type { Driver, Prisma, Ride } from '@prisma/client'
+import type { Prisma, Ride } from '@prisma/client'
 
 export interface IFindByCustomerAndDriverId {
   customerId: string
   driverId: number
+}
+
+interface IDriver {
+  id: number
+  name: string
 }
 
 export interface IRideRepository {
@@ -10,6 +15,6 @@ export interface IRideRepository {
   findByCustomerAndDriverId({
     customerId,
     driverId,
-  }: IFindByCustomerAndDriverId): Promise<(Ride & { driver: Driver })[]>
-  findByCustomerId(customerId: string): Promise<(Ride & { driver: Driver })[]>
+  }: IFindByCustomerAndDriverId): Promise<(Ride & { driver: IDriver })[]>
+  findByCustomerId(customerId: string): Promise<(Ride & { driver: IDriver })[]>
 }

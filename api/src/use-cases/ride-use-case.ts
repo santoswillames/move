@@ -3,7 +3,6 @@ import type { IDriverRepository } from '@/repositories/driver-repository'
 import type { IRideRepository } from '@/repositories/ride-repository'
 import { InvalidDriverError } from './errors/invalid-driver-error'
 import { ResourceNotFoundError } from './errors/resource-not-found-error'
-import type { Ride, Driver } from '@prisma/client'
 
 interface IRideUseCaseRequest {
   customerId: string
@@ -33,28 +32,10 @@ export class RideUseCase {
     private driverRepository: IDriverRepository,
   ) {}
 
-  private validateRides(rides: (Ride & { driver: Driver })[]): void {
-    if (rides.length === 0) {
-      throw new ResourceNotFoundError()
-    }
-  }
-
-  private mapRides(
-    rides: (Ride & { driver: Driver })[],
-  ): IRideUseCaseResponse['rides'] {
-    return rides.map(({ created_at, driver, ...rest }) => ({
-      ...rest,
-      date: created_at,
-      driver: { id: driver.id, name: driver.name },
-    }))
-  }
-
   async execute({
     customerId,
     driverId,
   }: IRideUseCaseRequest): Promise<IRideUseCaseResponse> {
-    let rides: (Ride & { driver: Driver })[]
-
     if (driverId) {
       const driver = await this.driverRepository.findById(driverId)
 
@@ -62,16 +43,41 @@ export class RideUseCase {
         throw new InvalidDriverError()
       }
 
-      rides = await this.rideRepository.findByCustomerAndDriverId({
+      const rides = await this.rideRepository.findByCustomerAndDriverId({
         customerId,
         driverId,
       })
-    } else {
-      rides = await this.rideRepository.findByCustomerId(customerId)
+
+      if (rides.length === 0) {
+        throw new ResourceNotFoundError()
+      }
+
+      const newRides = rides.map(
+        ({ updated_at, created_at, driver_id, customer_id, ...rest }) => ({
+          ...rest,
+          date: created_at,
+        }),
+      )
+
+      return {
+        customer_id: customerId,
+        rides: newRides,
+      }
     }
 
-    this.validateRides(rides)
-    const newRides = this.mapRides(rides)
+    const rides = await this.rideRepository.findByCustomerId(customerId)
+    console.log(rides)
+
+    if (rides.length === 0) {
+      throw new ResourceNotFoundError()
+    }
+
+    const newRides = rides.map(
+      ({ updated_at, created_at, driver_id, customer_id, ...rest }) => ({
+        ...rest,
+        date: created_at,
+      }),
+    )
 
     return {
       customer_id: customerId,
