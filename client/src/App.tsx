@@ -1,7 +1,14 @@
 import './index.css'
 
+import { Toaster } from 'sonner'
+
 import { Router } from './routes'
 
 export function App() {
-  return <Router />
+  return (
+    <>
+      <Toaster richColors />
+      <Router />
+    </>
+  )
 }
