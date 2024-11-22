@@ -10,6 +10,6 @@ export interface IRideRepository {
   findByCustomerAndDriverId({
     customerId,
     driverId,
-  }: IFindByCustomerAndDriverId): Promise<Ride[] | null>
+  }: IFindByCustomerAndDriverId): Promise<Ride[]>
   findByCustomerId(customer_id: string): Promise<Ride[]>
 }
