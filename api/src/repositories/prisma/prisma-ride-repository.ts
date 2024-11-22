@@ -23,6 +23,14 @@ export class PrismaRideRepository implements IRideRepository {
         customer_id: customerId,
         driver_id: driverId,
       },
+      include: {
+        driver: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
       orderBy: {
         created_at: 'desc',
       },
@@ -31,10 +39,18 @@ export class PrismaRideRepository implements IRideRepository {
     return rides
   }
 
-  async findByCustomerId(customer_id: string) {
+  async findByCustomerId(customerId: string) {
     const rides = await prisma.ride.findMany({
       where: {
-        customer_id,
+        customer_id: customerId,
+      },
+      include: {
+        driver: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
       orderBy: {
         created_at: 'desc',
