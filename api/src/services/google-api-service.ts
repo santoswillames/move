@@ -1,27 +1,64 @@
+import { env } from '@/env'
 import axios from 'axios'
 
-interface GoogleApiResponse {
-  // Tipagem baseada na resposta que a API retorna
-  data: any
+export interface GoogleApiResponse {
+  routes: Array<{
+    duration: {
+      value: string
+    }
+    distanceMeters: number
+    legs: Array<{
+      startLocation: {
+        latitude: number
+        longitude: number
+      }
+      endLocation: {
+        latitude: number
+        longitude: number
+      }
+    }>
+  }>
 }
+/**
+ * 
+ * {
+     "latLng": {
+         "latitude": number,
+         "longitude": number
+     },
+     "heading": integer
+    }
+ * 
+ */
 
 export class GoogleApiService {
-  private readonly baseUrl = 'https://maps.googleapis.com/maps/api'
-  private readonly apiKey = 'GOOGLE_API_KEY'
+  private readonly baseUrl =
+    'https://routes.googleapis.com/directions/v2:computeRoutes'
+
+  private readonly apiKey = env.GOOGLE_API_KEY
 
   async getDirections(
     origin: string,
     destination: string,
   ): Promise<GoogleApiResponse> {
-    const url = `${this.baseUrl}/directions/json`
-    const params = {
-      origin,
-      destination,
-      key: this.apiKey,
-    }
-
     try {
-      const response = await axios.get<GoogleApiResponse>(url, { params })
+      const response = await axios.post(
+        this.baseUrl,
+        {
+          origin: { address: origin },
+          destination: { address: destination },
+          travelMode: 'DRIVE', // Modo de transporte
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Goog-Api-Key': this.apiKey, // Chave da API
+            'X-Goog-FieldMask':
+              'routes.duration,routes.distanceMeters,routes.legs.startLocation,routes.legs.endLocation', // Campos necessários
+          },
+        },
+      )
+      console.log(response.data)
       return response.data
     } catch (error) {
       console.error('Error fetching directions from Google API:', error)
