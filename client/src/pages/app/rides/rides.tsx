@@ -1,8 +1,6 @@
-import { Input } from '@/components/ui/input'
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -14,7 +12,9 @@ import { Paginations } from '@/components/paginations'
 export function Rides() {
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-3xl font-bold tracking-tight">Rides</h1>
+      <h1 className="text-3xl font-bold tracking-tight">
+        Histórico de passeios
+      </h1>
 
       <div className="space-y-2.5">
         <RidesTableFilters />
