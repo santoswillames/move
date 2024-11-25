@@ -5,7 +5,7 @@ import { AuthLayout } from './pages/_layouts/auth'
 import { Home } from './pages/app/home'
 import { SignIn } from './pages/auth/sign-in'
 import { SignUp } from './pages/auth/sign-up'
-import { Rides } from './pages/app/rides'
+import { Rides } from './pages/app/rides/rides'
 
 export function Router() {
   return (
