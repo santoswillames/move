@@ -3,6 +3,7 @@ import type {
   GoogleApiResponse,
   GoogleApiService,
 } from '@/services/google-api-service'
+import { ResourceNotFoundError } from './errors/resource-not-found-error'
 
 interface IRideEstimateRequest {
   origin: string
@@ -48,6 +49,10 @@ export class RideEstimateUseCase {
       origin,
       destination,
     )
+
+    if (Object.keys(directions).length === 0) {
+      throw new ResourceNotFoundError()
+    }
 
     const drivers = await this.driverRepository.findByCompatibleKm(
       directions.routes[0].distanceMeters / 1000,
