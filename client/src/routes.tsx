@@ -7,6 +7,7 @@ import { SignIn } from './pages/auth/sign-in'
 import { SignUp } from './pages/auth/sign-up'
 import { Rides } from './pages/app/rides/rides'
 import { NotFound } from './pages/404'
+import { ConfirmRide } from './pages/app/confirm-ride/confirm-ride'
 
 export function Router() {
   return (
@@ -14,6 +15,7 @@ export function Router() {
       <Route element={<AppLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/rides" element={<Rides />} />
+        <Route path="/confirm-ride" element={<ConfirmRide />} />
       </Route>
       <Route element={<AuthLayout />}>
         <Route path="/sign-in" element={<SignIn />} />
