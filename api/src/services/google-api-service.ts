@@ -9,27 +9,20 @@ export interface GoogleApiResponse {
     distanceMeters: number
     legs: Array<{
       startLocation: {
-        latitude: number
-        longitude: number
+        latLng: {
+          latitude: number
+          longitude: number
+        }
       }
       endLocation: {
-        latitude: number
-        longitude: number
+        latLng: {
+          latitude: number
+          longitude: number
+        }
       }
     }>
   }>
 }
-/**
- * 
- * {
-     "latLng": {
-         "latitude": number,
-         "longitude": number
-     },
-     "heading": integer
-    }
- * 
- */
 
 export class GoogleApiService {
   private readonly baseUrl =
@@ -45,20 +38,24 @@ export class GoogleApiService {
       const response = await axios.post(
         this.baseUrl,
         {
-          origin: { address: origin },
-          destination: { address: destination },
-          travelMode: 'DRIVE', // Modo de transporte
+          origin: {
+            address: origin,
+          },
+          destination: {
+            address: destination,
+          },
+          travelMode: 'DRIVE',
         },
         {
           headers: {
             'Content-Type': 'application/json',
-            'X-Goog-Api-Key': this.apiKey, // Chave da API
+            'X-Goog-Api-Key': `${this.apiKey}`, // Chave da API
             'X-Goog-FieldMask':
               'routes.duration,routes.distanceMeters,routes.legs.startLocation,routes.legs.endLocation', // Campos necessários
           },
         },
       )
-      console.log(response.data)
+
       return response.data
     } catch (error) {
       console.error('Error fetching directions from Google API:', error)
