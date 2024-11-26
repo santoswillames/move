@@ -6,12 +6,16 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { api } from '@/services/api'
 
 const signUpForm = z
   .object({
-    name: z.string(),
+    name: z.string().min(3, { message: 'Campo obrigatório' }).trim(),
     email: z.string().email(),
-    password: z.string().min(6),
+    password: z
+      .string()
+      .min(6, { message: 'A senha deve conter no mínimo 6 dígitos' }),
     confirmPassword: z.string().min(6),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -27,19 +31,24 @@ export function SignUp() {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<SignUpForm>()
+    formState: { isSubmitting, errors },
+  } = useForm<SignUpForm>({
+    resolver: zodResolver(signUpForm),
+  })
 
-  async function handleSignUp(data: SignUpForm) {
-    console.log(data)
-    await new Promise((resolve) => setTimeout(resolve, 3000))
+  async function handleSignUp({ name, email, password }: SignUpForm) {
+    try {
+      await api.post('/customers', { name, email, password })
 
-    toast.success('Cadastro realizado com sucesso!', {
-      action: {
-        label: 'Login',
-        onClick: () => navigate('/sign-in'),
-      },
-    })
+      toast.success('Cadastro realizado com sucesso!', {
+        action: {
+          label: 'Login',
+          onClick: () => navigate('/sign-in'),
+        },
+      })
+    } catch (error) {
+      toast.error('Erro ao tentar realizar cadastro.')
+    }
   }
 
   return (
@@ -65,6 +74,11 @@ export function SignUp() {
               placeholder="Como gostaria de ser chamado(a)?"
               {...register('name')}
             />
+            {errors.name?.message && (
+              <span className="text-sm text-rose-600 dark:text-rose-400">
+                {errors.name.message}
+              </span>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">E-mail</Label>
