@@ -45,3 +45,20 @@ interface IRideEstimateResponse {
   }>
   routeResponse: GoogleApiResponse
 }
+
+export interface IRidesResponse {
+  customer_id: string
+  rides: Array<{
+    id: string
+    date: Date
+    origin: string
+    destination: string
+    distance: number
+    duration: string
+    driver: {
+      id: number
+      name: string
+    }
+    value: number
+  }>
+}
