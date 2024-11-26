@@ -3,9 +3,7 @@ import axios from 'axios'
 
 export interface GoogleApiResponse {
   routes: Array<{
-    duration: {
-      value: string
-    }
+    duration: string
     distanceMeters: number
     legs: Array<{
       startLocation: {

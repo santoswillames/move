@@ -84,7 +84,7 @@ export class RideEstimateUseCase {
         longitude: directions.routes[0].legs[0].endLocation.latLng.longitude,
       },
       distance: directions.routes[0].distanceMeters,
-      duration: directions.routes[0].duration.value,
+      duration: directions.routes[0].duration,
       options: driversCalculate,
       routeResponse: directions,
     }
