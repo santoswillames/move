@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router'
-import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -31,12 +30,7 @@ export function SignIn() {
   const { signIn } = useContext(AuthContext)
 
   async function handleSignIn(data: SignInForm) {
-    try {
-      await signIn(data)
-    } catch (error) {
-      console.log(error)
-      toast.error(error.response.data.message)
-    }
+    await signIn(data)
   }
 
   return (
