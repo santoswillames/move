@@ -3,9 +3,9 @@ import { Outlet, Navigate } from 'react-router'
 import { AuthContext } from './context/auth-context'
 
 export function PrivateRoutes({ redirectTo = '/sign-in' }) {
-  const { isAuthenticated } = useContext(AuthContext)
+  const { isAuthenticated, isLoading } = useContext(AuthContext)
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !isLoading) {
     return <Navigate to={redirectTo} />
   }
 

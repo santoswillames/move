@@ -1,14 +1,17 @@
+import type { IRideEstimateResponse } from '@/@types/response-api'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { api } from '@/services/api'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router'
+import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
 const requestRideForm = z.object({
-  origin: z.string().email(),
-  destination: z.string().min(6),
+  origin: z.string().min(3, { message: 'Campo obrigatório' }),
+  destination: z.string().min(3, { message: 'Campo obrigatório' }),
 })
 
 type RequestRideForm = z.infer<typeof requestRideForm>
@@ -18,13 +21,24 @@ export function FormRequestRide() {
     register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<RequestRideForm>()
+  } = useForm<RequestRideForm>({
+    resolver: zodResolver(requestRideForm),
+  })
+
+  const navigate = useNavigate()
 
   async function handleRequestRide(data: RequestRideForm) {
-    console.log(data)
-    await new Promise((resolve) => setTimeout(resolve, 3000))
+    try {
+      const response = await api.post('/ride/estimate', data)
 
-    toast.success('FEito')
+      const dataRide: IRideEstimateResponse = response.data
+
+      navigate('/confirm-ride', {
+        state: dataRide,
+      })
+    } catch (error) {
+      toast.error('Erro ao tentar calcular rota.')
+    }
   }
 
   return (
@@ -61,7 +75,7 @@ export function FormRequestRide() {
           </div>
 
           <Button className="w-full" type="submit" disabled={isSubmitting}>
-            Calcular rota
+            {isSubmitting ? 'Calculando...' : 'Calcular rota'}
           </Button>
         </form>
       </div>
