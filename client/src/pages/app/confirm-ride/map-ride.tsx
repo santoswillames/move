@@ -1,4 +1,6 @@
-const googleKey = import.meta.env.VITE_GOOGLE_API_KEY
+import { env } from '@/env'
+
+const googleKey = env.VITE_GOOGLE_API_KEY
 
 export function MapRide() {
   return (

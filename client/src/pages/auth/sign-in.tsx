@@ -6,10 +6,13 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 const signInForm = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+  email: z.string().email({ message: 'Digite um e-mail válido' }),
+  password: z
+    .string()
+    .min(6, { message: 'A senha precisa ter no mínimo 6 dígitos' }),
 })
 
 type SignInForm = z.infer<typeof signInForm>
@@ -18,8 +21,10 @@ export function SignIn() {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<SignInForm>()
+    formState: { isSubmitting, errors },
+  } = useForm<SignInForm>({
+    resolver: zodResolver(signInForm),
+  })
 
   async function handleSignIn(data: SignInForm) {
     console.log(data)
@@ -51,6 +56,11 @@ export function SignIn() {
               placeholder="examplo@gmail.com"
               {...register('email')}
             />
+            {errors.email?.message && (
+              <span className="text-sm text-rose-600 dark:text-rose-400">
+                {errors.email.message}
+              </span>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -61,6 +71,11 @@ export function SignIn() {
               placeholder="Senha"
               {...register('password')}
             />
+            {errors.password?.message && (
+              <span className="text-sm text-rose-600 dark:text-rose-400">
+                {errors.password.message}
+              </span>
+            )}
           </div>
 
           <Button className="w-full" type="submit" disabled={isSubmitting}>
