@@ -1,3 +1,4 @@
+import { api } from '@/services/api'
 import { createContext } from 'react'
 import type { ReactNode } from 'react'
 
@@ -21,7 +22,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const isAuthenticated = false
 
   async function signIn({ email, password }: SignInCredentials) {
-    console.log(email, password)
+    const response = await api.post('/sessions', { email, password })
+
+    console.log(response.data)
   }
 
   return (

@@ -31,7 +31,12 @@ export function SignIn() {
   const { signIn } = useContext(AuthContext)
 
   async function handleSignIn(data: SignInForm) {
-    await signIn(data)
+    try {
+      await signIn(data)
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response.data.message)
+    }
   }
 
   return (
