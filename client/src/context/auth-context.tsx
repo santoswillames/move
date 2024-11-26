@@ -21,7 +21,7 @@ type SignInCredentials = {
 type AuthContextData = {
   signIn(credentials: SignInCredentials): Promise<void>
   isAuthenticated: boolean
-  user: User
+  user: User | undefined
 }
 
 type AuthProviderProps = {
@@ -31,7 +31,7 @@ type AuthProviderProps = {
 export const AuthContext = createContext({} as AuthContextData)
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState({} as User)
+  const [user, setUser] = useState<User>()
   const navigate = useNavigate()
   const isAuthenticated = !!user
 

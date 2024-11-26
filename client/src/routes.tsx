@@ -8,14 +8,17 @@ import { SignUp } from './pages/auth/sign-up'
 import { Rides } from './pages/app/rides/rides'
 import { NotFound } from './pages/404'
 import { ConfirmRide } from './pages/app/confirm-ride/confirm-ride'
+import { PrivateRoutes } from './private-routes'
 
 export function Router() {
   return (
     <Routes>
-      <Route element={<AppLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/rides" element={<Rides />} />
-        <Route path="/confirm-ride" element={<ConfirmRide />} />
+      <Route element={<PrivateRoutes />}>
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/rides" element={<Rides />} />
+          <Route path="/confirm-ride" element={<ConfirmRide />} />
+        </Route>
       </Route>
       <Route element={<AuthLayout />}>
         <Route path="/sign-in" element={<SignIn />} />
