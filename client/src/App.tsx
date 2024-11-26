@@ -4,12 +4,15 @@ import { Toaster } from 'sonner'
 
 import { Router } from './routes'
 import { ThemeProvider } from './components/theme/theme-provider'
+import { AuthProvider } from './context/auth-context'
 
 export function App() {
   return (
     <ThemeProvider storageKey="shopper-move-theme">
-      <Toaster richColors />
-      <Router />
+      <AuthProvider>
+        <Toaster richColors />
+        <Router />
+      </AuthProvider>
     </ThemeProvider>
   )
 }

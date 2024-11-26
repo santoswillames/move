@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useContext } from 'react'
+import { AuthContext } from '@/context/auth-context'
 
 const signInForm = z.object({
   email: z.string().email({ message: 'Digite um e-mail válido' }),
@@ -26,11 +28,10 @@ export function SignIn() {
     resolver: zodResolver(signInForm),
   })
 
-  async function handleSignIn(data: SignInForm) {
-    console.log(data)
-    await new Promise((resolve) => setTimeout(resolve, 3000))
+  const { signIn } = useContext(AuthContext)
 
-    toast.success('FEito')
+  async function handleSignIn(data: SignInForm) {
+    await signIn(data)
   }
 
   return (
