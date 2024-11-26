@@ -16,7 +16,7 @@ const signUpForm = z
     password: z
       .string()
       .min(6, { message: 'A senha deve conter no mínimo 6 dígitos' }),
-    confirmPassword: z.string().min(6),
+    confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'As senhas são diferentes',
@@ -88,6 +88,11 @@ export function SignUp() {
               placeholder="examplo@gmail.com"
               {...register('email')}
             />
+            {errors.email?.message && (
+              <span className="text-sm text-rose-600 dark:text-rose-400">
+                {errors.email.message}
+              </span>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -98,6 +103,11 @@ export function SignUp() {
               placeholder="Escolha uma senha no min 6 dígitos"
               {...register('password')}
             />
+            {errors.password?.message && (
+              <span className="text-sm text-rose-600 dark:text-rose-400">
+                {errors.password.message}
+              </span>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">Confirme sua senha</Label>
@@ -107,6 +117,11 @@ export function SignUp() {
               placeholder="Confirme sua senha"
               {...register('confirmPassword')}
             />
+            {errors.confirmPassword?.message && (
+              <span className="text-sm text-rose-600 dark:text-rose-400">
+                {errors.confirmPassword.message}
+              </span>
+            )}
           </div>
 
           <Button className="w-full" type="submit" disabled={isSubmitting}>

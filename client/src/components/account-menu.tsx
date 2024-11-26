@@ -4,12 +4,21 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
+import { useContext } from 'react'
+import { AuthContext } from '@/context/auth-context'
+import { useNavigate } from 'react-router'
 
 export function AccountMenu() {
+  const { user } = useContext(AuthContext)
+  const navigate = useNavigate()
+
+  function handleLogOut() {
+    localStorage.removeItem('user')
+    navigate('/sign-in')
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -17,18 +26,15 @@ export function AccountMenu() {
           variant="outline"
           className="flex select-none items-center gap-2"
         >
-          Dev Will
+          {user?.email}
           <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel className="flex flex-col">
-          <span className="text-xs font-normal text-muted-foreground">
-            will@teste.com.br
-          </span>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-rose-500 dark:text-rose-400">
+        <DropdownMenuItem
+          className="text-rose-500 dark:text-rose-400"
+          onClick={handleLogOut}
+        >
           <LogOut className="mr-2 h-4 w-4" />
           Sair
         </DropdownMenuItem>
