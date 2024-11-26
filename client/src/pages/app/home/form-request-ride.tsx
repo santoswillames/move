@@ -34,9 +34,16 @@ export function FormRequestRide() {
       const dataRide: IRideEstimateResponse = response.data
 
       navigate('/confirm-ride', {
-        state: dataRide,
+        state: {
+          dataRide: {
+            ...dataRide,
+            inputOrigin: data.origin,
+            inputDestination: data.destination,
+          },
+        },
       })
     } catch (error) {
+      console.log(error)
       toast.error('Erro ao tentar calcular rota.')
     }
   }
