@@ -7,44 +7,39 @@ import {
 } from '@/components/ui/table'
 import { RidesTableRow } from './rides-table-row'
 import { RidesTableFilters } from './rides-table-filters'
-import { useEffect, useState } from 'react'
 import { api } from '@/services/api'
 import { useSearchParams } from 'react-router'
 import { capitalize } from '@/utils/format-string-capitalize'
-
-interface DataRides {
-  id: string
-  date: Date
-  origin: string
-  destination: string
-  distance: number
-  duration: string
-  driver: {
-    id: number
-    name: string
-  }
-  value: number
-}
+import { useQuery } from '@tanstack/react-query'
+import type { IRidesResponse } from '@/@types/response-api'
 
 export function Rides() {
-  const [dataRides, setDataRides] = useState<DataRides[] | []>([])
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
 
   const driverName = searchParams.get('driverName')
+  console.log('NAME', driverName)
 
-  if (driverName) {
-    const drivers = dataRides.map(({ driver }) => driver)
-    const drive = drivers.find((el) => el.name.includes(capitalize(driverName)))
-    console.log(drive)
-  }
+  const { data: result } = useQuery({
+    queryKey: ['rides', driverName],
+    queryFn: fetchRides,
+  })
 
-  useEffect(() => {
-    async function fetchRides() {
-      const response = await api.get('/ride')
-      setDataRides(response.data.rides)
+  async function fetchRides(): Promise<IRidesResponse> {
+    const { data } = await api.get<IRidesResponse>('/ride')
+    if (driverName) {
+      const drivers = data.rides.map(({ driver }) => driver)
+      const drive = drivers.find((el) =>
+        el.name.includes(capitalize(driverName)),
+      )
+      console.log(drive)
+      const response = await api.get<IRidesResponse>(
+        `/ride?driver_id=${drive?.id}`,
+      )
+
+      return response.data
     }
-    fetchRides()
-  }, [])
+    return data
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -69,9 +64,9 @@ export function Rides() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {dataRides.map((ride) => (
-                <RidesTableRow key={ride.id} ride={ride} />
-              ))}
+              {result?.rides.map((ride) => {
+                return <RidesTableRow key={ride.id} ride={ride} />
+              })}
             </TableBody>
           </Table>
         </div>
