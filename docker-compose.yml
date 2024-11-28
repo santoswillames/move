@@ -38,7 +38,7 @@ services:
         VITE_GOOGLE_API_KEY: ${GOOGLE_API_KEY}
         VITE_API_URL: "http://localhost:8080" 
     ports:
-      - "8081:80"
+      - "80:80"
     networks:
       - mynetwork
     depends_on:
